@@ -130,9 +130,14 @@ public class ZeroConf extends CordovaPlugin {
 
 	private void watch(String type) {
 		if (jmdns == null) {
-			jmdns = JmDNS.create();
-			setupWatcher();
-			getList(type);
+			try {
+				jmdns = JmDNS.create();
+				setupWatcher();
+				getList(type);
+			} catch (IOException e) {
+				e.printStackTrace();
+				return;
+			}
 		}
 		Log.d("ZeroConf", "Watch " + type);
 		Log.d("ZeroConf",
@@ -183,33 +188,29 @@ public class ZeroConf extends CordovaPlugin {
 	
 	private void setupWatcher() {
 		Log.d("ZeroConf", "Setup watcher");
-		try {
-			listener = new ServiceListener() {
+		
+		listener = new ServiceListener() {
 
-				public void serviceResolved(ServiceEvent ev) {
-					Log.d("ZeroConf", "Resolved");
+			public void serviceResolved(ServiceEvent ev) {
+				Log.d("ZeroConf", "Resolved");
 
-					sendCallback("added", ev.getInfo());
-				}
+				sendCallback("added", ev.getInfo());
+			}
 
-				public void serviceRemoved(ServiceEvent ev) {
-					Log.d("ZeroConf", "Removed");
+			public void serviceRemoved(ServiceEvent ev) {
+				Log.d("ZeroConf", "Removed");
 
-					sendCallback("removed", ev.getInfo());
-				}
+				sendCallback("removed", ev.getInfo());
+			}
 
-				public void serviceAdded(ServiceEvent event) {
-					Log.d("ZeroConf", "Added");
+			public void serviceAdded(ServiceEvent event) {
+				Log.d("ZeroConf", "Added");
 
-					// Force serviceResolved to be called again
-					jmdns.requestServiceInfo(event.getType(), event.getName(), 1);
-				}
-			};
-
-		} catch (IOException e) {
-			e.printStackTrace();
-			return;
-		}
+				// Force serviceResolved to be called again
+				jmdns.requestServiceInfo(event.getType(), event.getName(), 1);
+			}
+		};
+		
 	}
 
 	public void sendCallback(String action, ServiceInfo info) {
