@@ -231,6 +231,7 @@ public class ZeroConf extends CordovaPlugin {
 		} catch (JSONException e) {
 
 			e.printStackTrace();
+			Log.e("ZeroConf", "Send callback error: " + e.toString());
 		}
 
 	}
