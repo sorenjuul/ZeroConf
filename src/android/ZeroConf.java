@@ -133,7 +133,7 @@ public class ZeroConf extends CordovaPlugin {
 			try {
 				jmdns = JmDNS.create();
 				setupWatcher();
-				getList(type);
+				//getList(type);
 			} catch (IOException e) {
 				e.printStackTrace();
 				return;
