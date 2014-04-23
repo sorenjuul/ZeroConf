@@ -130,7 +130,9 @@ public class ZeroConf extends CordovaPlugin {
 
 	private void watch(String type) {
 		if (jmdns == null) {
+			jmdns = JmDNS.create();
 			setupWatcher();
+			getList(type);
 		}
 		Log.d("ZeroConf", "Watch " + type);
 		Log.d("ZeroConf",
@@ -161,11 +163,27 @@ public class ZeroConf extends CordovaPlugin {
 			e.printStackTrace();
 		}
 	}
-
+	
+	private void getList(String type){
+		
+		Log.d("ZeroConf", "refresh services...");
+		try {
+			final ServiceInfo[] services = registry.list(type);
+			
+			Log.d("ZeroConf", "List service..." + type);
+			Log.d("ZeroConf", services.length + " services (" + type + ") is found.");
+			for (ServiceInfo service : services) {
+				sendCallback("found", ev.getInfo());
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			Log.e("ZeroConf", ex.toString());
+		}
+	}
+	
 	private void setupWatcher() {
 		Log.d("ZeroConf", "Setup watcher");
 		try {
-			jmdns = JmDNS.create();
 			listener = new ServiceListener() {
 
 				public void serviceResolved(ServiceEvent ev) {
@@ -204,8 +222,6 @@ public class ZeroConf extends CordovaPlugin {
 			PluginResult result = new PluginResult(PluginResult.Status.OK,
 					status);
 			result.setKeepCallback(true);
-			
-			//this.callback.success(status);
 			
 			this.callback.sendPluginResult(result);
                 		
