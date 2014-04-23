@@ -200,11 +200,13 @@ public class ZeroConf extends CordovaPlugin {
 			status.put("action", action);
 			status.put("service", jsonifyService(info));
 			Log.d("ZeroConf", "Sending result: " + status.toString());
-
+			
 			PluginResult result = new PluginResult(PluginResult.Status.OK,
 					status);
 			result.setKeepCallback(true);
+			this.callbackContext.sendPluginResult(result);
 			this.callback.success(status);
+			Log.d("ZeroConf", "Sending done");
 
 		} catch (JSONException e) {
 
