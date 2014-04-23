@@ -173,7 +173,7 @@ public class ZeroConf extends CordovaPlugin {
 			Log.d("ZeroConf", "List service..." + type);
 			Log.d("ZeroConf", services.length + " services (" + type + ") is found.");
 			for (ServiceInfo service : services) {
-				sendCallback("found", ev.getInfo());
+				sendCallback("found", service);
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
