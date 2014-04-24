@@ -268,7 +268,7 @@ public class ZeroConf extends CordovaPlugin {
              * Delegate method from mDNS when a subtype is discovered.
              */
             public void subTypeForServiceTypeAdded(ServiceEvent event) {
-                Log.i(TAG, String.format("ZeroConf subTypeForServiceTypeAdded(event=\n%s\n)", event.toString()));
+                Log.i("ZeroConf", String.format("ZeroConf subTypeForServiceTypeAdded(event=\n%s\n)", event.toString()));
             }
         };
 
