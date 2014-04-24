@@ -163,14 +163,18 @@ public class ZeroConf extends CordovaPlugin {
 
     private void sendDatagramPacket(){
         // join a Multicast group and send the group salutations
-
-        String msg = "Hello";
-        InetAddress group = deviceIpAddress;
-        MulticastSocket s = new MulticastSocket(6789);
-        s.joinGroup(group);
-        DatagramPacket hi = new DatagramPacket(msg.getBytes(), msg.length(),
-                group, 6789);
-        s.send(hi);
+        try {
+            String msg = "Hello";
+            InetAddress group = deviceIpAddress;
+            MulticastSocket s = new MulticastSocket(6789);
+            s.joinGroup(group);
+            DatagramPacket hi = new DatagramPacket(msg.getBytes(), msg.length(),
+                    group, 6789);
+            s.send(hi);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return;
+        }
     }
 
     private void unwatch(String type) {
