@@ -28,11 +28,16 @@ import org.json.JSONObject;
 
 import android.net.wifi.WifiManager;
 import android.util.Log;
+import android.net.wifi.WifiInfo;
+
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 import javax.jmdns.JmDNS;
 import javax.jmdns.ServiceEvent;
 import javax.jmdns.ServiceInfo;
 import javax.jmdns.ServiceListener;
+import javax.jmdns.ServiceTypeListener;
 
 public class ZeroConf extends CordovaPlugin {
 	WifiManager.MulticastLock lock;
@@ -40,7 +45,6 @@ public class ZeroConf extends CordovaPlugin {
 	private ServiceListener listener;
     private ServiceTypeListener typeListener;
 	private CallbackContext callback;
-    private MulticastSocket multicastSocket;
 
 	@Override
 	public void initialize(CordovaInterface cordova, CordovaWebView webView) {
@@ -133,7 +137,7 @@ public class ZeroConf extends CordovaPlugin {
 	private void watch(String type) {
 		if (jmdns == null) {
 			try {
-                WifiManager wifi = (WifiManager) this.getSystemService(Context.WIFI_SERVICE);
+                WifiManager wifi = (WifiManager) this.cordova.getActivity().getSystemService(android.content.Context.WIFI_SERVICE);
                 final InetAddress deviceIpAddress = getDeviceIpAddress(wifi);
                 jmdns = JmDNS.create(deviceIpAddress, "WiserFinder");
                 //jmdns = JmDNS.create();
@@ -186,7 +190,7 @@ public class ZeroConf extends CordovaPlugin {
             byte[] byteaddr = new byte[] { (byte) (intaddr & 0xff), (byte) (intaddr >> 8 & 0xff), (byte) (intaddr >> 16 & 0xff), (byte) (intaddr >> 24 & 0xff) };
             result = InetAddress.getByAddress(byteaddr);
         } catch (UnknownHostException ex) {
-            Log.w(TAG, String.format("getDeviceIpAddress Error: %s", ex.getMessage()));
+            Log.w("ZeroConf", String.format("getDeviceIpAddress Error: %s", ex.getMessage()));
         }
 
         return result;
