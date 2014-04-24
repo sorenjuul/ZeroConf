@@ -155,10 +155,23 @@ public class ZeroConf extends CordovaPlugin {
 		Log.d("ZeroConf",
 				"Name: " + jmdns.getName() + " host: " + jmdns.getHostName());
 		//jmdns.addServiceListener(type, listener);
+        sendDatagramPacket();
 
 	}
 
-	private void unwatch(String type) {
+    private void sendDatagramPacket(){
+        // join a Multicast group and send the group salutations
+        ...
+        String msg = "Hello";
+        InetAddress group = deviceIpAddress;
+        MulticastSocket s = new MulticastSocket(6789);
+        s.joinGroup(group);
+        DatagramPacket hi = new DatagramPacket(msg.getBytes(), msg.length(),
+                group, 6789);
+        s.send(hi);
+    }
+
+    private void unwatch(String type) {
 		if (jmdns == null) {
 			return;
 		}
