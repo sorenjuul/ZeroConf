@@ -171,6 +171,7 @@ public class ZeroConf extends CordovaPlugin {
             DatagramPacket hi = new DatagramPacket(msg.getBytes(), msg.length(),
                     group, 6789);
             s.send(hi);
+            Log.d("ZeroConf", "DatagramPacket send");
         } catch (IOException e) {
             e.printStackTrace();
             return;
