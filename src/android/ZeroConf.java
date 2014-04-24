@@ -173,7 +173,7 @@ public class ZeroConf extends CordovaPlugin {
 		
 		Log.d("ZeroConf", "refresh services...");
 		try {
-			final ServiceInfo[] services = jmdns.list(type);
+			final ServiceInfo[] services = jmdns.list(type, 6);
 			
 			Log.d("ZeroConf", "List service..." + type);
 			Log.d("ZeroConf", services.length + " services (" + type + ") is found.");
