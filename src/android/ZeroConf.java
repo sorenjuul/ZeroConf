@@ -161,7 +161,7 @@ public class ZeroConf extends CordovaPlugin {
 
     private void sendDatagramPacket(){
         // join a Multicast group and send the group salutations
-        ...
+
         String msg = "Hello";
         InetAddress group = deviceIpAddress;
         MulticastSocket s = new MulticastSocket(6789);
