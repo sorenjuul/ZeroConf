@@ -156,7 +156,7 @@ public class ZeroConf extends CordovaPlugin {
 		Log.d("ZeroConf", "Watch " + type);
 		Log.d("ZeroConf",
 				"Name: " + jmdns.getName() + " host: " + jmdns.getHostName());
-		jmdns.addServiceListener(type, listener);
+		//jmdns.addServiceListener(type, listener);
         sendDatagramPacket();
 
 	}
@@ -275,7 +275,7 @@ public class ZeroConf extends CordovaPlugin {
              */
             public void serviceTypeAdded(final ServiceEvent event) {
                 Log.i("ZeroConf", String.format("ZeroConf serviceTypeAdded(event=\n%s\n)", event.toString()));
-                //jmdns.addServiceListener(event.getType(), listener);
+                jmdns.addServiceListener(event.getType(), listener);
                 /*runOnUiThread(new Runnable() {
                     public void run() {
                         final ServiceType type = new ServiceType();
