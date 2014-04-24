@@ -45,12 +45,13 @@ public class ZeroConf extends CordovaPlugin {
 	private ServiceListener listener;
     private ServiceTypeListener typeListener;
 	private CallbackContext callback;
+    private WifiManager wifi;
 
 	@Override
 	public void initialize(CordovaInterface cordova, CordovaWebView webView) {
 		super.initialize(cordova, webView);
 
-		WifiManager wifi = (WifiManager) this.cordova.getActivity()
+		wifi = (WifiManager) this.cordova.getActivity()
 				.getSystemService(android.content.Context.WIFI_SERVICE);
 		lock = wifi.createMulticastLock("ZeroConfPluginLock");
 		lock.setReferenceCounted(true);
@@ -137,8 +138,7 @@ public class ZeroConf extends CordovaPlugin {
 	private void watch(String type) {
 		if (jmdns == null) {
 			try {
-                WifiManager wifi = (WifiManager) this.cordova.getActivity().getSystemService(android.content.Context.WIFI_SERVICE);
-                final InetAddress deviceIpAddress = getDeviceIpAddress(wifi);
+                InetAddress deviceIpAddress = getDeviceIpAddress(wifi);
                 jmdns = JmDNS.create(deviceIpAddress, "WiserFinder");
                 //jmdns = JmDNS.create();
 				setupTypeWatcher();
