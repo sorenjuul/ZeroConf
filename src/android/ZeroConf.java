@@ -133,10 +133,7 @@ public class ZeroConf extends CordovaPlugin {
 			try {
 				jmdns = JmDNS.create();
 				setupWatcher();
-                Log.d("ZeroConf", "Requesting service Wiser");
-                jmdns.requestServiceInfo(type, "WISER", true, 6000);
-                Log.d("ZeroConf", "Requesting service Wiser done");
-                getList(type);
+
 			} catch (IOException e) {
 				e.printStackTrace();
 				return;
@@ -146,6 +143,11 @@ public class ZeroConf extends CordovaPlugin {
 		Log.d("ZeroConf",
 				"Name: " + jmdns.getName() + " host: " + jmdns.getHostName());
 		jmdns.addServiceListener(type, listener);
+
+        Log.d("ZeroConf", "Requesting service Wiser");
+        jmdns.requestServiceInfo(type, "*", true, 6000);
+        Log.d("ZeroConf", "Requesting service Wiser done");
+        getList(type);
 	}
 
 	private void unwatch(String type) {
