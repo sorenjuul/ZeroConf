@@ -57,7 +57,9 @@ public class ZeroConf extends CordovaPlugin {
 		wifi = (WifiManager) this.cordova.getActivity()
 				.getSystemService(android.content.Context.WIFI_SERVICE);
         deviceIpAddress = getDeviceIpAddress(wifi);
-
+        lock = wifi.createMulticastLock("ZeroConfPluginLock");
+		lock.setReferenceCounted(true);
+		lock.acquire();
 
         Log.v("ZeroConf", "Initialized");
 	}
@@ -156,9 +158,6 @@ public class ZeroConf extends CordovaPlugin {
 				"Name: " + jmdns.getName() + " host: " + jmdns.getHostName());
 		//jmdns.addServiceListener(type, listener);
         sendDatagramPacket();
-        lock = wifi.createMulticastLock("ZeroConfPluginLock");
-        lock.setReferenceCounted(true);
-        lock.acquire();
 
 	}
 
@@ -166,7 +165,7 @@ public class ZeroConf extends CordovaPlugin {
         // join a Multicast group and send the group salutations
         try {
             String msg = "Hello";
-            InetAddress group = deviceIpAddress;
+            InetAddress group = InetAddress.getByName("228.5.6.7");
             MulticastSocket s = new MulticastSocket(6789);
             s.joinGroup(group);
             DatagramPacket hi = new DatagramPacket(msg.getBytes(), msg.length(),
