@@ -32,6 +32,8 @@ import android.net.wifi.WifiInfo;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.net.MulticastSocket;
+import java.net.DatagramSocket;
 
 import javax.jmdns.JmDNS;
 import javax.jmdns.ServiceEvent;
