@@ -145,8 +145,14 @@ public class ZeroConf extends CordovaPlugin {
 		jmdns.addServiceListener(type, listener);
 
         Log.d("ZeroConf", "Requesting service Wiser");
-        jmdns.requestServiceInfo(type, "");
+        jmdns.requestServiceInfo(type, "WISER");
         Log.d("ZeroConf", "Requesting service Wiser done");
+
+
+        Log.d("ZeroConf", "Requesting service Wiser");
+        jmdns.getServiceInfo(type, "WISER");
+        Log.d("ZeroConf", "Requesting service Wiser done");
+
         getList(type);
 	}
 
