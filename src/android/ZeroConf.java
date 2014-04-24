@@ -38,7 +38,9 @@ public class ZeroConf extends CordovaPlugin {
 	WifiManager.MulticastLock lock;
 	private JmDNS jmdns = null;
 	private ServiceListener listener;
+    private ServiceTypeListener typeListener;
 	private CallbackContext callback;
+    private MulticastSocket multicastSocket;
 
 	@Override
 	public void initialize(CordovaInterface cordova, CordovaWebView webView) {
@@ -50,7 +52,7 @@ public class ZeroConf extends CordovaPlugin {
 		lock.setReferenceCounted(true);
 		lock.acquire();
 
-		Log.v("ZeroConf", "Initialized");
+        Log.v("ZeroConf", "Initialized");
 	}
 
 	@Override
@@ -131,8 +133,11 @@ public class ZeroConf extends CordovaPlugin {
 	private void watch(String type) {
 		if (jmdns == null) {
 			try {
-				jmdns = JmDNS.create();
-				setupWatcher();
+                WifiManager wifi = (WifiManager) this.getSystemService(Context.WIFI_SERVICE);
+                final InetAddress deviceIpAddress = getDeviceIpAddress(wifi);
+                jmdns = JmDNS.create(deviceIpAddress, "WiserFinder");
+                //jmdns = JmDNS.create();
+				setupTypeWatcher();
 
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -142,18 +147,7 @@ public class ZeroConf extends CordovaPlugin {
 		Log.d("ZeroConf", "Watch " + type);
 		Log.d("ZeroConf",
 				"Name: " + jmdns.getName() + " host: " + jmdns.getHostName());
-		jmdns.addServiceListener(type, listener);
-
-        Log.d("ZeroConf", "Requesting service Wiser");
-        //jmdns.requestServiceInfo(type, null);
-        Log.d("ZeroConf", "Requesting service Wiser done");
-
-
-        Log.d("ZeroConf", "Requesting service Wiser");
-        //jmdns.getServiceInfo(type, null);
-        Log.d("ZeroConf", "Requesting service Wiser done");
-
-        //getList(type);
+		//jmdns.addServiceListener(type, listener);
 	}
 
 	private void unwatch(String type) {
@@ -179,7 +173,26 @@ public class ZeroConf extends CordovaPlugin {
 			e.printStackTrace();
 		}
 	}
-	
+
+    private InetAddress getDeviceIpAddress(WifiManager wifi) {
+        InetAddress result = null;
+        try {
+            // default to Android localhost
+            result = InetAddress.getByName("10.0.0.2");
+
+            // figure out our wifi address, otherwise bail
+            WifiInfo wifiinfo = wifi.getConnectionInfo();
+            int intaddr = wifiinfo.getIpAddress();
+            byte[] byteaddr = new byte[] { (byte) (intaddr & 0xff), (byte) (intaddr >> 8 & 0xff), (byte) (intaddr >> 16 & 0xff), (byte) (intaddr >> 24 & 0xff) };
+            result = InetAddress.getByAddress(byteaddr);
+        } catch (UnknownHostException ex) {
+            Log.w(TAG, String.format("getDeviceIpAddress Error: %s", ex.getMessage()));
+        }
+
+        return result;
+    }
+
+
 	private void getList(String type){
 		
 		Log.d("ZeroConf", "refresh services...");
@@ -223,6 +236,41 @@ public class ZeroConf extends CordovaPlugin {
 		};
 		
 	}
+
+    private void setupTypeWatcher() {
+        Log.d("ZeroConf", "Setup type watcher");
+
+        typeListener = new ServiceTypeListener() {
+
+            /**
+             * Delegate method from mDNS when a new service type is discovered.
+             */
+            public void serviceTypeAdded(final ServiceEvent event) {
+                Log.i("ZeroConf", String.format("ZeroConf serviceTypeAdded(event=\n%s\n)", event.toString()));
+                jmdns.addServiceListener(event.getType(), listener);
+                /*runOnUiThread(new Runnable() {
+                    public void run() {
+                        final ServiceType type = new ServiceType();
+                        type.setName(event.getType());
+                        GROUPS.add(type);
+                        Collections.sort(GROUPS);
+                        DETAILS.put(event.getType(), new ArrayList<ServiceInfo>());
+                        mAdapter.notifyDataSetChanged();
+                    }
+                });*/
+            }
+
+            /**
+             * Delegate method from mDNS when a subtype is discovered.
+             */
+            public void subTypeForServiceTypeAdded(ServiceEvent event) {
+                Log.i(TAG, String.format("ZeroConf subTypeForServiceTypeAdded(event=\n%s\n)", event.toString()));
+            }
+        };
+
+    }
+
+
 
 	public void sendCallback(String action, ServiceInfo info) {
 		JSONObject status = new JSONObject();
