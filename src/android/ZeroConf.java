@@ -142,6 +142,7 @@ public class ZeroConf extends CordovaPlugin {
                 //jmdns = JmDNS.create(deviceIpAddress, "WiserFinder");
                 jmdns = JmDNS.create();
 				setupTypeWatcher();
+                jmdns.addServiceTypeListener(typeListener);
 
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -152,7 +153,7 @@ public class ZeroConf extends CordovaPlugin {
 		Log.d("ZeroConf",
 				"Name: " + jmdns.getName() + " host: " + jmdns.getHostName());
 		//jmdns.addServiceListener(type, listener);
-        jmdns.addServiceTypeListener(typeListener);
+
 	}
 
 	private void unwatch(String type) {
