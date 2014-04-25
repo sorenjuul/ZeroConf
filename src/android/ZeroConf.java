@@ -117,12 +117,19 @@ public class ZeroConf extends CordovaPlugin {
 
 		} else if (action.equals("close")) {
 			if (jmdns != null) {
-                try {
-                    jmdns.close(); // Thread-safe.
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    return false;
-                }
+
+                    cordova.getThreadPool().execute(new Runnable() {
+                        public void run() {
+                            try {
+                                jmdns = null;
+                                //jmdns.close(); // Thread-safe.
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                                return false;
+                            }
+                        }
+                    });
+                    lock.release();
             }
             return true;
 		} else if (action.equals("unregister")) {
@@ -135,9 +142,8 @@ public class ZeroConf extends CordovaPlugin {
 			callbackContext.error("Invalid action.");
 			return false;
 		}
-		PluginResult result = new PluginResult(Status.NO_RESULT);
-		result.setKeepCallback(true);
-		// return result;
+        PluginResult result = new PluginResult(Status.NO_RESULT);
+        result.setKeepCallback(true);
 		return true;
 	}
 
