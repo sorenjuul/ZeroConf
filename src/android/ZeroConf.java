@@ -120,7 +120,12 @@ public class ZeroConf extends CordovaPlugin {
 				try {
                     cordova.getThreadPool().execute(new Runnable() {
                         public void run() {
-                            jmdns.close(); // Thread-safe.
+                            try {
+                                jmdns.close(); // Thread-safe.
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                                return;
+                            }
                         }
                     });
 				} catch (IOException e) {
