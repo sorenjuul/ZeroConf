@@ -167,8 +167,8 @@ public class ZeroConf extends CordovaPlugin {
 		try {
             jmdns.addServiceListener(type, listener);
         } catch (IllegalStateException e) {
+            Log.e("ZeroConf", "Error on: addServiceListener" + e.printStackTrace());
             e.printStackTrace();
-            Log.e("ZeroConf", "Error: " + e.printStackTrace());
             return;
         }
         //sendDatagramPacket();
