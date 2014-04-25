@@ -30,6 +30,7 @@ import android.net.wifi.WifiManager;
 import android.util.Log;
 import android.net.wifi.WifiInfo;
 
+import java.lang.IllegalStateException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.net.MulticastSocket;
@@ -121,7 +122,6 @@ public class ZeroConf extends CordovaPlugin {
                     cordova.getThreadPool().execute(new Runnable() {
                         public void run() {
                             try {
-
                                 jmdns.close(); // Thread-safe.
                                 jmdns = null;
                             } catch (IOException e) {
@@ -164,7 +164,13 @@ public class ZeroConf extends CordovaPlugin {
 		Log.d("ZeroConf", "Watch " + type);
 		Log.d("ZeroConf",
 				"Name: " + jmdns.getName() + " host: " + jmdns.getHostName());
-		jmdns.addServiceListener(type, listener);
+		try {
+            jmdns.addServiceListener(type, listener);
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+            Log.e("ZeroConf", "Error: " + e.printStackTrace());
+            return;
+        }
         //sendDatagramPacket();
 
 	}
