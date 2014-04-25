@@ -40,6 +40,9 @@ var ZeroConf = {
 	unregister: function () {
 		return exec(null, ZeroConf.fail, "ZeroConf", "unregister", []);
 	},
+    browse: function () {
+        return exec(null, ZeroConf.fail, "ZeroConf", "browse", []);
+    },
 	fail: function (o) {
 		console.error("Error " + JSON.stringify(o));
 	}
