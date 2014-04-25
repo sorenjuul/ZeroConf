@@ -150,8 +150,8 @@ public class ZeroConf extends CordovaPlugin {
 			try {
                 jmdns = JmDNS.create(deviceIpAddress, "WiserFinder");
                 setupWatcher();
-                //setupTypeWatcher();
-                //jmdns.addServiceTypeListener(typeListener);
+                setupTypeWatcher();
+                jmdns.addServiceTypeListener(typeListener);
 
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -280,7 +280,7 @@ public class ZeroConf extends CordovaPlugin {
              */
             public void serviceTypeAdded(final ServiceEvent event) {
                 Log.i("ZeroConf", String.format("ZeroConf serviceTypeAdded(event=\n%s\n)", event.toString()));
-                jmdns.addServiceListener(event.getType(), listener);
+                //jmdns.addServiceListener(event.getType(), listener);
                 /*runOnUiThread(new Runnable() {
                     public void run() {
                         final ServiceType type = new ServiceType();
