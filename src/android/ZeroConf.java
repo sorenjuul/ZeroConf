@@ -123,7 +123,7 @@ public class ZeroConf extends CordovaPlugin {
                         e.printStackTrace();
                         return;
                     }
-                });
+                }
 			}
             return true;
 		} else if (action.equals("unregister")) {
