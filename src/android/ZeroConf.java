@@ -128,7 +128,13 @@ public class ZeroConf extends CordovaPlugin {
 				jmdns.unregisterAllServices();
 			}
 
-		} else {
+		} else if (action.equals("browse")) {
+            cordova.getThreadPool().execute(new Runnable() {
+                public void run() {
+                    sendDatagramPacket();
+                }
+            });
+        }else {
 			Log.e("ZeroConf", "Invalid action: " + action);
 			callbackContext.error("Invalid action.");
 			return false;
@@ -161,7 +167,7 @@ public class ZeroConf extends CordovaPlugin {
 		Log.d("ZeroConf",
 				"Name: " + jmdns.getName() + " host: " + jmdns.getHostName());
 		jmdns.addServiceListener(type, listener);
-        sendDatagramPacket();
+        //sendDatagramPacket();
 
 	}
 
