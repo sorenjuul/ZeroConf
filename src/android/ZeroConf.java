@@ -150,8 +150,8 @@ public class ZeroConf extends CordovaPlugin {
 			try {
                 jmdns = JmDNS.create(deviceIpAddress, "WiserFinder");
                 setupWatcher();
-                setupTypeWatcher();
-                jmdns.addServiceTypeListener(typeListener);
+                //setupTypeWatcher();
+                //jmdns.addServiceTypeListener(typeListener);
 
 			} catch (IOException e) {
 				e.printStackTrace();
