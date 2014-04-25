@@ -117,20 +117,16 @@ public class ZeroConf extends CordovaPlugin {
 
 		} else if (action.equals("close")) {
 			if (jmdns != null) {
-				try {
-                    cordova.getThreadPool().execute(new Runnable() {
-                        public void run() {
-                            try {
-                                jmdns.close(); // Thread-safe.
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                                return;
-                            }
+                cordova.getThreadPool().execute(new Runnable() {
+                    public void run() {
+                        try {
+                            jmdns.close(); // Thread-safe.
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            return;
                         }
-                    });
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+                    }
+                });
 			}
 		} else if (action.equals("unregister")) {
 			if (jmdns != null) {
