@@ -58,9 +58,7 @@ public class ZeroConf extends CordovaPlugin {
 		wifi = (WifiManager) this.cordova.getActivity()
 				.getSystemService(android.content.Context.WIFI_SERVICE);
         deviceIpAddress = getDeviceIpAddress(wifi);
-        lock = wifi.createMulticastLock("ZeroConfPluginLock");
-		lock.setReferenceCounted(true);
-		lock.acquire();
+
 
         Log.v("ZeroConf", "Initialized");
 	}
@@ -151,6 +149,9 @@ public class ZeroConf extends CordovaPlugin {
 	private void watch(String type) {
 		if (jmdns == null) {
 			try {
+                lock = wifi.createMulticastLock("ZeroConfPluginLock");
+                lock.setReferenceCounted(true);
+                lock.acquire();
                 jmdns = JmDNS.create(deviceIpAddress, "Finder");
                 setupWatcher();
                 //setupTypeWatcher();
