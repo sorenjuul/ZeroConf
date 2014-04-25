@@ -128,13 +128,7 @@ public class ZeroConf extends CordovaPlugin {
 				jmdns.unregisterAllServices();
 			}
 
-		} else if (action.equals("browse")) {
-            cordova.getThreadPool().execute(new Runnable() {
-                public void run() {
-                    sendDatagramPacket();
-                }
-            });
-        }else {
+		} else {
 			Log.e("ZeroConf", "Invalid action: " + action);
 			callbackContext.error("Invalid action.");
 			return false;
@@ -148,7 +142,7 @@ public class ZeroConf extends CordovaPlugin {
 	private void watch(String type) {
 		if (jmdns == null) {
 			try {
-                jmdns = JmDNS.create(deviceIpAddress, "WiserFinder");
+                jmdns = JmDNS.create(deviceIpAddress, "Finder");
                 setupWatcher();
                 //setupTypeWatcher();
                 //jmdns.addServiceTypeListener(typeListener);
@@ -281,16 +275,6 @@ public class ZeroConf extends CordovaPlugin {
             public void serviceTypeAdded(final ServiceEvent event) {
                 Log.i("ZeroConf", String.format("ZeroConf serviceTypeAdded(event=\n%s\n)", event.toString()));
                 //jmdns.addServiceListener(event.getType(), listener);
-                /*runOnUiThread(new Runnable() {
-                    public void run() {
-                        final ServiceType type = new ServiceType();
-                        type.setName(event.getType());
-                        GROUPS.add(type);
-                        Collections.sort(GROUPS);
-                        DETAILS.put(event.getType(), new ArrayList<ServiceInfo>());
-                        mAdapter.notifyDataSetChanged();
-                    }
-                });*/
             }
 
             /**
