@@ -125,7 +125,7 @@ public class ZeroConf extends CordovaPlugin {
                                 //jmdns.close(); // Thread-safe.
                             } catch (IOException e) {
                                 e.printStackTrace();
-                                return false;
+                                return;
                             }
                         }
                     });
